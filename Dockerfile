@@ -1,14 +1,12 @@
-FROM python:3.7-alpine
+FROM python:3.10
 
-RUN pip3 --no-cache-dir install --upgrade \
-    pip==19.3.1 \
-    pipenv==2018.11.26
+RUN pip install poetry
 
-COPY Pipfile* /
+COPY poetry.lock pyproject.toml /
 
-RUN pipenv install --system --deploy
+RUN poetry update && poetry install
 
 COPY count.py .
 COPY .env .
 
-CMD ["python", "count.py"]
+CMD ["poetry", "run", "python", "count.py"]
